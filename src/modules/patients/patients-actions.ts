@@ -5,6 +5,9 @@ export const findPatientById = async (id: number) => {
   const patientFound = await AppDataSource.manager.findOne<Patient>(Patient, {
     where:{
       id
+    },
+    relations:{
+      appointments: true
     }
   });
 
@@ -34,10 +37,13 @@ export const updatePatient = async (id: number, data: Partial<Patient>) => {
 
 export const deletePatient = async (id: number) => {
   
-  const patientUpdated = await AppDataSource.manager.delete<Patient>(
+  const patientDeleted = await AppDataSource.manager.delete<Patient>(
     Patient,
     { id },
   );
 
-  return patientUpdated;
+  if (patientDeleted?.affected === 0)
+    throw new Error('Patient to delete with id ' + id + ' not found');
+
+  return patientDeleted;
 };
