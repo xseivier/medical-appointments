@@ -10,3 +10,10 @@ export const updateAppointmentSchema = yup.object().shape({
   serviceId: yup.number(),
   date: yup.date().min(new Date())
 });
+
+export const reportsAppointmentSchema = yup.object().shape({
+  startDate: yup.date(),
+  endDate: yup.date(),
+  patientId: yup.number().required()
+});
+

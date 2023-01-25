@@ -4,9 +4,10 @@ import { findServiceById } from '../services/serivces-actions';
 import {
   createAppointment,
   deleteAppointment,
+  findAppointmentsByDate,
   updateAppointment,
 } from './appointments-actions';
-import { createAppointmentSchema, updateAppointmentSchema } from './appointments-validator';
+import { createAppointmentSchema, reportsAppointmentSchema, updateAppointmentSchema } from './appointments-validator';
 
 export const createAppointmentHandler = async (
   req: Request,
@@ -121,4 +122,37 @@ export const deleteAppointmentHandler = async (
   }
 
   return res.json(deleteResult);
+};
+
+export const getAppointmentsByDateHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+
+  const { patientId } = req.params;
+  const { startDate, endDate } = req.query;
+
+  try {
+    await reportsAppointmentSchema.validate({startDate, endDate, patientId});
+  } catch (error) {
+    return next(error);
+  }
+
+  let patient;
+  try {
+    patient = await findPatientById(Number(patientId));
+  } catch (error) {
+    return next(error);
+  }
+
+  let report;
+  try {
+    report = await findAppointmentsByDate(startDate as string, endDate as string, Number(patientId));
+  } catch (error) {
+    return next(error);
+  }
+
+  return res.json(report);
+
 };
