@@ -14,11 +14,8 @@ export class Appointment {
   @PrimaryGeneratedColumn()
   readonly id!: number;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp' })
     date: string;
-
-  @Column({ type: 'time' })
-    time: string;
 
   @Column({ type: 'boolean', default: false })
     cancelled: boolean; 

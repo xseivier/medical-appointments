@@ -6,6 +6,7 @@ import 'reflect-metadata';
 import { patientsRouter } from './modules/patients/patients-router';
 import { handleErrors } from './shared/handleErrors';
 import { servicesRouter } from './modules/services/services-router';
+import { appointmentsRouter } from './modules/appointments/appointments-router';
 
 config();
 
@@ -13,6 +14,8 @@ const routes = Router();
 
 routes.use('/patient', patientsRouter);
 routes.use('/service', servicesRouter);
+routes.use('/appointment', appointmentsRouter);
+
 
 const app: Application = express();
 

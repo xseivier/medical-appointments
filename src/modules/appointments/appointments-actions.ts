@@ -35,10 +35,13 @@ export const updateAppointment = async (id: number, data: Partial<Appointment>) 
 
 export const deleteAppointment = async (id: number) => {
   
-  const appointmentUpdated = await AppDataSource.manager.delete<Appointment>(
+  const appoinmentDeleted = await AppDataSource.manager.delete<Appointment>(
     Appointment,
     { id },
   );
 
-  return appointmentUpdated;
+  if (appoinmentDeleted?.affected === 0)
+    throw new Error('Appointment to delete with id ' + id + ' not found');
+
+  return appoinmentDeleted;
 };

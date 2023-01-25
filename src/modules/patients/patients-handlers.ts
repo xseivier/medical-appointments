@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   createPatient,
   deletePatient,
-  findPatientById,
+  getPatientCompleteInformation,
   updatePatient,
 } from './patients-actions';
 import { createPatientSchema, updatePatientSchema } from './patients-validator';
@@ -22,7 +22,7 @@ export const getPatientInformationHandler = async (
 
   let patientInformation;
   try {
-    patientInformation = await findPatientById(Number(patientId));
+    patientInformation = await getPatientCompleteInformation(Number(patientId));
   } catch (error) {
     return next(error);
   }

@@ -5,9 +5,6 @@ export const findPatientById = async (id: number) => {
   const patientFound = await AppDataSource.manager.findOne<Patient>(Patient, {
     where:{
       id
-    },
-    relations:{
-      appointments: true
     }
   });
 
@@ -15,6 +12,24 @@ export const findPatientById = async (id: number) => {
 
   return patientFound;
 };
+
+export const getPatientCompleteInformation = async (id: number) => {
+  const patientFound = await AppDataSource.manager.findOne<Patient>(Patient, {
+    where:{
+      id
+    },
+    relations:{
+      appointments: {
+        service: true
+      }
+    }
+  });
+
+  if(!patientFound) throw new Error(`Patient with id ${id} not found`);
+
+  return patientFound;
+};
+
 
 export const createPatient = async (data: Partial<Patient>) => {
   const patientInput = AppDataSource.manager.create<Patient>(Patient, data);

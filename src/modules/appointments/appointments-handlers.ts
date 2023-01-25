@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
+import { findPatientById } from '../patients/patients-actions';
+import { findServiceById } from '../services/serivces-actions';
 import {
   createAppointment,
   deleteAppointment,
   updateAppointment,
 } from './appointments-actions';
-// import { createAppointmentSchema, updateAppointmentSchema } from './appointments-validator';
+import { createAppointmentSchema, updateAppointmentSchema } from './appointments-validator';
 
 export const createAppointmentHandler = async (
   req: Request,
@@ -12,29 +14,46 @@ export const createAppointmentHandler = async (
   next: NextFunction,
 ) => {
   console.log('req.body', req.body);
-  const { date, time, patient, service } = req.body;
+  const { date, patientId, serviceId } = req.body;
 
-  const inputCreate = {
-    date,
-    time,
-    patient,
-    service,
-  };
-
-  // try {
-  //   await createAppointmentSchema.validate(inputCreate);
-  // } catch (error) {
-  //   return next(error);
-  // }
-
-  let patientCreated;
   try {
-    patientCreated = await createAppointment(inputCreate);
+    await createAppointmentSchema.validate({date, patientId, serviceId});
   } catch (error) {
     return next(error);
   }
 
-  return res.json(patientCreated);
+  let patient;
+  try {
+    patient = await findPatientById(patientId);
+  } catch (error) {
+    return next(error);
+  }
+
+  if(patient.active !== true) {
+    return res.status(400).json({message:'Patient is not active'});
+  }
+
+  let service;
+  try {
+    service = await findServiceById(serviceId);
+  } catch (error) {
+    return next(error);
+  }
+
+  const inputCreate = {
+    date,
+    patient,
+    service,
+  };
+
+  let appointmentCreated;
+  try {
+    appointmentCreated = await createAppointment(inputCreate);
+  } catch (error) {
+    return next(error);
+  }
+
+  return res.json(appointmentCreated);
 };
 
 export const updateAppointmentHandler = async (
@@ -42,31 +61,38 @@ export const updateAppointmentHandler = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { date, time, patient, service } = req.body;
-  const { patientId } = req.params;
+  const { date, serviceId } = req.body;
+  const { appointmentId } = req.params;
 
-  if (!patientId)
+  if (!appointmentId)
     return res.status(400).json({
       message:
         'Appointment id is not provided, please check that the url params contains the patient id',
     });
 
+
+
+  try {
+    await updateAppointmentSchema.validate({date, serviceId});
+  } catch (error) {
+    return next(error);
+  }
+
+  let service;
+  try {
+    service = await findServiceById(serviceId);
+  } catch (error) {
+    return next(error);
+  }
+
   const inputUpdate = {
     date,
-    time,
-    patient,
     service,
   };
 
-  // try {
-  //   await updateAppointmentSchema.validate(inputUpdate);
-  // } catch (error) {
-  //   return next(error);
-  // }
-
   let updateResult;
   try {
-    updateResult = await updateAppointment(Number(patientId), inputUpdate);
+    updateResult = await updateAppointment(Number(appointmentId), inputUpdate);
   } catch (error) {
     return next(error);
   }
@@ -79,9 +105,9 @@ export const deleteAppointmentHandler = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { patientId } = req.params;
+  const { appointmentId } = req.params;
 
-  if (!patientId)
+  if (!appointmentId)
     return res.status(400).json({
       message:
         'Appointment id is not provided, please check that the url params contains the patient id',
@@ -89,7 +115,7 @@ export const deleteAppointmentHandler = async (
 
   let deleteResult;
   try {
-    deleteResult = await deleteAppointment(Number(patientId));
+    deleteResult = await deleteAppointment(Number(appointmentId));
   } catch (error) {
     return next(error);
   }
