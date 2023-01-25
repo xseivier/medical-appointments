@@ -9,6 +9,7 @@ import { Appointment } from './Appointment';
 export enum GenderFormat {
   MALE = 'Male',
   FEMALE = 'Female',
+  NO_SPECIFIED = 'No specified',
   OTHER = 'Other'
 }
 
@@ -18,23 +19,23 @@ export class Patient {
   @PrimaryGeneratedColumn()
   readonly id!: number;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
     firstName: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
     lastName: string;
 
-  @Column({ type: 'text', nullable: true })
-    age: string; 
+  @Column({ type: 'int' })
+    age: number; 
     
   @Column({
     type: 'enum',
     enum: GenderFormat,
-    default: GenderFormat.OTHER
+    default: GenderFormat.NO_SPECIFIED
   })    
     gender: GenderFormat;     
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: true })
     active: boolean;  
     
   @OneToMany(() => Appointment, (appoinment) => appoinment.patient)

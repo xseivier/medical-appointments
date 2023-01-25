@@ -19,7 +19,8 @@
     "mysql": "^2.18.1",
     "prettier": "^2.7.1",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.11"
+    "typeorm": "^0.3.11",
+    "yup": "^0.32.11"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
