@@ -24,6 +24,9 @@ export const findAppointmentsByDate = async (
           id: patientId,
         },
       },
+      relations:{
+        service: true
+      }
     },
   );
 
