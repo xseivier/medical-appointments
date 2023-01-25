@@ -13,4 +13,4 @@ appointmentsRouter.put('/:appointmentId', updateAppointmentHandler);
 appointmentsRouter.delete('/:appointmentId', deleteAppointmentHandler);
 
 // Consultar un reporte por fecha de las citas medicas relacionada por paciente
-appointmentsRouter.get('/:patientId', getAppointmentsByDateHandler);
+appointmentsRouter.get('/report/:patientId', getAppointmentsByDateHandler);
