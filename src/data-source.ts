@@ -6,6 +6,9 @@ import {
   DATABASE_PORT,
 } from './shared/environments';
 import { DataSource } from 'typeorm';
+import { Patient } from './entities/Patient';
+import { Service } from './entities/Service';
+import { Appointment } from './entities/Appointment';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -16,7 +19,7 @@ export const AppDataSource = new DataSource({
   database: DATABASE_NAME,
   synchronize: true,
   logging: true,
-  entities: [],
+  entities: [Patient, Service, Appointment],
   subscribers: [],
   migrations: [],
 });
