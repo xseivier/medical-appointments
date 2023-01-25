@@ -15,7 +15,7 @@ export const findAppointmentsByDate = async (
   } else if (endDate) {
     date = LessThan(endDate);
   }
-  const appointmentFound = await AppDataSource.manager.findOne<Appointment>(
+  const appointmentFound = await AppDataSource.manager.find<Appointment>(
     Appointment,
     {
       where: {
